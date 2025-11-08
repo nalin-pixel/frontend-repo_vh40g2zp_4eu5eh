@@ -1,44 +1,35 @@
 import React from 'react';
-import { Calendar, Filter, Download } from 'lucide-react';
 
-const LogRow = ({ dt, zone, method, ok }) => (
-  <div className="grid grid-cols-4 gap-2 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm">
-    <span className="text-slate-600 dark:text-slate-400">{dt}</span>
-    <span className="font-medium truncate">{zone}</span>
-    <span className="text-slate-600 dark:text-slate-400 truncate">{method}</span>
-    <span className={ok ? 'text-emerald-600 dark:text-emerald-300' : 'text-rose-600 dark:text-rose-300'}>{ok ? 'Granted' : 'Denied'}</span>
-  </div>
-);
+const rows = [
+  { time: '10:24', zone: 'Door A', result: 'Granted' },
+  { time: '09:58', zone: 'Server Room', result: 'Denied' },
+  { time: '09:40', zone: 'Main Entrance', result: 'Granted' },
+];
 
 const LogsPage = () => {
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 pb-28">
-      <header className="px-5 pt-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Access History</h2>
-          <button className="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-white/70 dark:bg-slate-900/70 backdrop-blur border border-slate-200 dark:border-slate-800">
-            <Download className="h-4 w-4" />
-            Export
-          </button>
-        </div>
-        <div className="mt-3 grid grid-cols-3 gap-2">
-          <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
-            <Calendar className="h-4 w-4" /> Date
-          </button>
-          <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
-            <Filter className="h-4 w-4" /> Zone
-          </button>
-          <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
-            <Filter className="h-4 w-4" /> Status
-          </button>
-        </div>
-      </header>
-
-      <main className="px-5 mt-4 space-y-2">
-        <LogRow dt="08-Nov 09:05" zone="Lab 2" method="Face ID" ok />
-        <LogRow dt="08-Nov 09:06" zone="Server Room" method="RFID" ok={false} />
-        <LogRow dt="08-Nov 09:12" zone="Main Gate" method="Mobile Key" ok />
-      </main>
+    <div className="space-y-3">
+      <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Access History</h2>
+      <div className="overflow-hidden rounded-2xl ring-1 ring-slate-200 dark:ring-slate-700">
+        <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+          <thead className="bg-slate-50/80 dark:bg-slate-800/40">
+            <tr>
+              <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 dark:text-slate-400">Time</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 dark:text-slate-400">Zone</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 dark:text-slate-400">Result</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200 bg-white/70 backdrop-blur-md dark:divide-slate-800 dark:bg-slate-900/60">
+            {rows.map((r, i) => (
+              <tr key={i}>
+                <td className="px-4 py-3 text-sm text-slate-700 dark:text-slate-200">{r.time}</td>
+                <td className="px-4 py-3 text-sm text-slate-700 dark:text-slate-200">{r.zone}</td>
+                <td className={`px-4 py-3 text-sm ${r.result === 'Granted' ? 'text-emerald-600' : 'text-rose-500'}`}>{r.result}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

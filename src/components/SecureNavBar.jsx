@@ -1,28 +1,38 @@
 import React from 'react';
-import { Home, Map, BarChart2, Users, Settings } from 'lucide-react';
+import { Home, List, Users, Settings, ShieldAlert } from 'lucide-react';
 
-const TabButton = ({ icon: Icon, label, active, onClick }) => (
-  <button
-    onClick={onClick}
-    className={`flex flex-col items-center justify-center flex-1 py-2 rounded-xl transition-all ${
-      active ? 'text-white bg-[#0056D2] shadow-lg shadow-[#0056D2]/30' : 'text-slate-500'
-    }`}
-  >
-    <Icon className="h-5 w-5" />
-    <span className="text-[11px] mt-1 font-medium">{label}</span>
-  </button>
-);
+const tabs = [
+  { key: 'home', label: 'Home', icon: Home },
+  { key: 'zones', label: 'Zones', icon: ShieldAlert },
+  { key: 'logs', label: 'Logs', icon: List },
+  { key: 'users', label: 'Users', icon: Users },
+  { key: 'settings', label: 'Settings', icon: Settings },
+];
 
-const SecureNavBar = ({ active = 'Home', onChange = () => {} }) => {
+const SecureNavBar = ({ value, onChange }) => {
   return (
-    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl p-2 shadow-xl">
-      <div className="flex gap-2">
-        <TabButton icon={Home} label="Home" active={active === 'Home'} onClick={() => onChange('Home')} />
-        <TabButton icon={Map} label="Zones" active={active === 'Zones'} onClick={() => onChange('Zones')} />
-        <TabButton icon={BarChart2} label="Logs" active={active === 'Logs'} onClick={() => onChange('Logs')} />
-        <TabButton icon={Users} label="Users" active={active === 'Users'} onClick={() => onChange('Users')} />
-        <TabButton icon={Settings} label="Settings" active={active === 'Settings'} onClick={() => onChange('Settings')} />
-      </div>
+    <nav className="fixed bottom-5 left-1/2 z-50 w-[92%] -translate-x-1/2 rounded-2xl bg-white/80 p-2 backdrop-blur-md shadow-lg ring-1 ring-slate-200 dark:bg-slate-900/70 dark:ring-slate-700">
+      <ul className="grid grid-cols-5 gap-1">
+        {tabs.map(({ key, label, icon: Icon }) => {
+          const active = value === key;
+          return (
+            <li key={key}>
+              <button
+                onClick={() => onChange(key)}
+                className={`flex w-full flex-col items-center justify-center rounded-xl px-2 py-2 text-xs transition-colors ${
+                  active
+                    ? 'bg-[#0056D2] text-white shadow'
+                    : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'
+                }`}
+                aria-label={label}
+              >
+                <Icon size={18} />
+                <span className="mt-1">{label}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </nav>
   );
 };

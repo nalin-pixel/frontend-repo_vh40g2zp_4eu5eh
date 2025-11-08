@@ -1,28 +1,28 @@
 import React from 'react';
-import { LockOpen, FileText, Map, Users } from 'lucide-react';
+import { LockOpen, List, ShieldAlert, Users } from 'lucide-react';
 
-const ActionButton = ({ icon: Icon, label, color = 'blue' }) => {
-  const styles = {
-    blue: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300',
-    cyan: 'bg-cyan-50 text-cyan-700 dark:bg-cyan-900/20 dark:text-cyan-300',
-    slate: 'bg-slate-50 text-slate-700 dark:bg-slate-800/40 dark:text-slate-300',
-    violet: 'bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-300',
-  };
-  return (
-    <button className={`flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 ${styles[color]} transition-transform active:scale-95`}>
-      <Icon className="h-6 w-6" />
-      <span className="text-xs font-semibold">{label}</span>
-    </button>
-  );
-};
+const actions = [
+  { key: 'unlock', label: 'Unlock', icon: LockOpen, color: 'bg-[#0056D2]' },
+  { key: 'logs', label: 'Logs', icon: List, color: 'bg-sky-500' },
+  { key: 'zones', label: 'Zones', icon: ShieldAlert, color: 'bg-emerald-500' },
+  { key: 'users', label: 'Users', icon: Users, color: 'bg-violet-500' },
+];
 
-const QuickActions = () => {
+const QuickActions = ({ onAction }) => {
   return (
     <div className="grid grid-cols-4 gap-3">
-      <ActionButton icon={LockOpen} label="Unlock" color="blue" />
-      <ActionButton icon={FileText} label="Logs" color="cyan" />
-      <ActionButton icon={Map} label="Zones" color="slate" />
-      <ActionButton icon={Users} label="Users" color="violet" />
+      {actions.map(({ key, label, icon: Icon, color }) => (
+        <button
+          key={key}
+          onClick={() => onAction?.(key)}
+          className="flex flex-col items-center gap-2 rounded-2xl bg-white/70 p-3 text-slate-700 shadow-sm ring-1 ring-slate-200 backdrop-blur-md transition hover:shadow dark:bg-slate-900/60 dark:text-slate-200 dark:ring-slate-700"
+        >
+          <span className={`inline-flex h-10 w-10 items-center justify-center rounded-xl text-white ${color} shadow`}> 
+            <Icon size={18} />
+          </span>
+          <span className="text-xs">{label}</span>
+        </button>
+      ))}
     </div>
   );
 };

@@ -1,46 +1,55 @@
-import React from 'react';
-import { Shield, Moon, Bell, Puzzle, LogOut } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Bell, Moon, SunMedium, Shield } from 'lucide-react';
 
-const SettingsItem = ({ icon: Icon, title, subtitle, action }) => (
-  <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-    <div className="flex items-center gap-3 text-left">
-      <div className="h-10 w-10 rounded-xl bg-slate-50 dark:bg-slate-800/60 flex items-center justify-center">
-        <Icon className="h-5 w-5 text-slate-600 dark:text-slate-300" />
-      </div>
-      <div>
-        <p className="font-medium">{title}</p>
-        {subtitle && <p className="text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>}
-      </div>
-    </div>
-    {action}
-  </button>
-);
+const SettingsPage = ({ theme, onToggleTheme }) => {
+  const [pref, setPref] = useState(theme);
 
-const SettingsPage = () => {
+  useEffect(() => setPref(theme), [theme]);
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 pb-28">
-      <header className="px-5 pt-6">
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Settings</h2>
+
+      <div className="rounded-2xl bg-white/70 p-4 ring-1 ring-slate-200 backdrop-blur-md dark:bg-slate-900/60 dark:ring-slate-700">
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#0056D2] to-[#00C4CC]" />
+          <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500 text-white shadow"><Shield size={18} /></div>
           <div>
-            <h2 className="text-lg font-semibold">Sangita</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Admin • SecurePass</p>
+            <div className="text-sm font-medium text-slate-800 dark:text-slate-100">Profile & Security</div>
+            <div className="text-xs text-slate-500 dark:text-slate-400">Manage password, biometrics, and devices</div>
           </div>
         </div>
-      </header>
+      </div>
 
-      <main className="px-5 mt-4 space-y-3">
-        <SettingsItem icon={Shield} title="Security Settings" subtitle="Change password, MFA setup" action={<span className="text-sm text-slate-400">Manage</span>} />
-        <SettingsItem icon={Moon} title="Theme" subtitle="Light/Dark mode" action={<span className="text-sm text-slate-400">Toggle</span>} />
-        <SettingsItem icon={Bell} title="Notifications" subtitle="Push & alerts" action={<span className="text-sm text-slate-400">Configure</span>} />
-        <SettingsItem icon={Puzzle} title="Integrations" subtitle="Camera, HR System" action={<span className="text-sm text-slate-400">Open</span>} />
+      <div className="rounded-2xl bg-white/70 p-4 ring-1 ring-slate-200 backdrop-blur-md dark:bg-slate-900/60 dark:ring-slate-700">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-white shadow"><Bell size={18} /></div>
+            <div>
+              <div className="text-sm font-medium text-slate-800 dark:text-slate-100">Notifications</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">Alerts and critical events</div>
+            </div>
+          </div>
+          <button className="rounded-lg px-3 py-2 text-xs text-[#0056D2] hover:bg-slate-50 dark:hover:bg-slate-800">Configure</button>
+        </div>
+      </div>
 
-        <button className="w-full mt-2 flex items-center justify-center gap-2 p-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-900/40">
-          <LogOut className="h-4 w-4" /> Logout
-        </button>
-
-        <p className="text-center text-xs text-slate-400 mt-4">v1.0.0 SecurePass App</p>
-      </main>
+      <div className="rounded-2xl bg-white/70 p-4 ring-1 ring-slate-200 backdrop-blur-md dark:bg-slate-900/60 dark:ring-slate-700">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500 text-white shadow"><SunMedium size={18} /></div>
+            <div>
+              <div className="text-sm font-medium text-slate-800 dark:text-slate-100">Appearance</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">Light/Dark theme</div>
+            </div>
+          </div>
+          <button
+            onClick={onToggleTheme}
+            className="inline-flex items-center gap-2 rounded-xl bg-[#0056D2] px-3 py-2 text-xs font-medium text-white shadow hover:opacity-95"
+          >
+            {pref === 'dark' ? <SunMedium size={16} /> : <Moon size={16} />} {pref === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
