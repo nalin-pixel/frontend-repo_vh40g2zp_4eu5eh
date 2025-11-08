@@ -4,6 +4,12 @@ import HeroSpline from './components/HeroSpline';
 import StatCards from './components/StatCards';
 import QuickActions from './components/QuickActions';
 import SecureNavBar from './components/SecureNavBar';
+import ZonesPage from './components/ZonesPage';
+import LogsPage from './components/LogsPage';
+import UsersPage from './components/UsersPage';
+import SettingsPage from './components/SettingsPage';
+import AlertsDrawer from './components/AlertsDrawer';
+import AccessRequestModal from './components/AccessRequestModal';
 
 const GradientButton = ({ children, onClick, className = '' }) => (
   <button
@@ -67,14 +73,17 @@ const LoginScreen = ({ onLogin }) => {
   );
 };
 
-const AlertBanner = () => (
-  <div className="mt-4 flex items-center gap-3 p-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-900/40">
-    <Bell className="h-5 w-5" />
-    <p className="text-sm font-medium">Security Alerts: 2 failed attempts detected</p>
+const AlertBanner = ({ onOpenAlerts }) => (
+  <div className="mt-4 flex items-center justify-between p-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-900/40">
+    <div className="flex items-center gap-3">
+      <Bell className="h-5 w-5" />
+      <p className="text-sm font-medium">Security Alerts: 2 failed attempts detected</p>
+    </div>
+    <button onClick={onOpenAlerts} className="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-white/70 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">View</button>
   </div>
 );
 
-const HomeScreen = () => {
+const HomeScreen = ({ onOpenAlerts, onOpenRequest }) => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 pb-28">
       <header className="px-5 pt-6">
@@ -86,12 +95,14 @@ const HomeScreen = () => {
               <span>Access Level: Admin</span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0056D2] to-[#00C4CC]" />
+          <button aria-label="Open alerts" onClick={onOpenAlerts} className="p-2 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <Bell className="h-5 w-5 text-[#0056D2]" />
+          </button>
         </div>
         <div className="mt-5">
           <StatCards />
         </div>
-        <AlertBanner />
+        <AlertBanner onOpenAlerts={onOpenAlerts} />
       </header>
 
       <main className="px-5 mt-6 space-y-5">
@@ -101,20 +112,38 @@ const HomeScreen = () => {
         </section>
 
         <section className="relative">
-          <button className="fixed bottom-24 right-5 h-14 w-14 rounded-full shadow-xl bg-gradient-to-br from-[#0056D2] to-[#00C4CC] text-white flex items-center justify-center">
+          <button onClick={onOpenRequest} className="fixed bottom-24 right-5 h-14 w-14 rounded-full shadow-xl bg-gradient-to-br from-[#0056D2] to-[#00C4CC] text-white flex items-center justify-center">
             <Plus className="h-6 w-6" />
           </button>
         </section>
       </main>
-
-      <SecureNavBar active="Home" />
     </div>
   );
 };
 
 const App = () => {
   const [authed, setAuthed] = useState(false);
-  return authed ? <HomeScreen /> : <LoginScreen onLogin={() => setAuthed(true)} />;
+  const [tab, setTab] = useState('Home');
+  const [alertsOpen, setAlertsOpen] = useState(false);
+  const [requestOpen, setRequestOpen] = useState(false);
+
+  if (!authed) return <LoginScreen onLogin={() => setAuthed(true)} />;
+
+  let Screen = null;
+  if (tab === 'Home') Screen = <HomeScreen onOpenAlerts={() => setAlertsOpen(true)} onOpenRequest={() => setRequestOpen(true)} />;
+  if (tab === 'Zones') Screen = <ZonesPage />;
+  if (tab === 'Logs') Screen = <LogsPage />;
+  if (tab === 'Users') Screen = <UsersPage />;
+  if (tab === 'Settings') Screen = <SettingsPage />;
+
+  return (
+    <>
+      {Screen}
+      <SecureNavBar active={tab} onChange={setTab} />
+      <AlertsDrawer open={alertsOpen} onClose={() => setAlertsOpen(false)} />
+      <AccessRequestModal open={requestOpen} onClose={() => setRequestOpen(false)} />
+    </>
+  );
 };
 
 export default App;
